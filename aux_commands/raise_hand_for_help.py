@@ -57,7 +57,7 @@ async def go_for_help_from_message(member: discord.Member, message: discord.Mess
             await supr.delete(delay = 0)
         else:
             empty_queue_message = await private_text_channel.send(
-                btm.queue_is_empty_message(), delete_after= 10)
+                btm.queue_is_empty_message())
             help_queue.empty_queue_message = empty_queue_message.id
             supr1 = await private_text_channel.fetch_message(message_id)
             supr2 = await private_text_channel.fetch_message(help_message.id)
@@ -114,7 +114,7 @@ async def aux_go_for_help_from_command(ctx, member: discord.Member) -> bool:
         await supr.delete(delay = 0)
     else:
         empty_queue_message = await private_text_channel.send(
-                btm.queue_is_empty_message(), delete_after= 10)
+                btm.queue_is_empty_message())
         help_queue.empty_queue_message = empty_queue_message.id
         supr1 = await private_text_channel.fetch_message(message_id)
         supr2 = await private_text_channel.fetch_message(help_message.id)
