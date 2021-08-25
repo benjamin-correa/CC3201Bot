@@ -2,6 +2,7 @@ import re
 from typing import Union, Optional, List
 
 import discord
+from discord_slash.utils.manage_commands import create_permission
 
 from global_variables import STUDENT_ROLE_NAME
 from utils.guild_config import GUILD_CONFIG
@@ -220,3 +221,17 @@ def get_excluded_groups(*args) -> List[int]:
         except ValueError:
             continue
     return excluded_groups
+
+def remove_permission_for_roles(role_names: List[str], client: discord.Client):
+    permission_dict = {}
+    guilds = list(GUILD_CONFIG.config.keys())
+    for guild in guilds:
+        permission_dict[guild] = []
+        try:
+            for role_name in role_names:
+                role_id = discord.utils.get(client.get_guild(guild).roles,name=role_name)
+                permission_dict[guild] += create_permission(role_id, 1, False)
+        except ValueError:
+            continue
+        
+        

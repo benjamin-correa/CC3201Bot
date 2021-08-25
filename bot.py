@@ -33,6 +33,7 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
 slash= SlashCommand(bot, sync_commands=True)
 guilds=list(GUILD_CONFIG.config.keys())
+NO_STUDENTS_ROLE = {}
 join_make_group_lock = Lock()
 
 """
@@ -44,6 +45,7 @@ join_make_group_lock = Lock()
 
 @bot.event
 async def on_ready():
+    global NO_STUDENTS_ROLE
     # guild = discord.utils.find(lambda g: g.name == GUILD, client.guilds)
     # guild = discord.utils.get(bot.guilds, id=int(GUILD_ID))
     try:
@@ -51,6 +53,7 @@ async def on_ready():
         for guild in bot.guilds:
             await aux_init_guild(guild)
         bot.loop.create_task(save_all_task())
+        NO_STUDENTS_ROLE = hpf.remove_permission_for_roles([STUDENT_ROLE_NAME], bot)
         print("Ready to roll!")
     except UnicodeEncodeError as e:
         print(e)
@@ -523,13 +526,8 @@ async def save_all_task():
 @slash.slash(
     name="go",
     description="Go to the next group that has asked for help.",
-    guild_ids=guilds)
-@slash.permission(
-    guild_id=878346656893010013,
-    permissions=[
-        create_permission(878355476184715324, SlashCommandPermissionType.ROLE, True),
-        create_permission(878355478822920203, SlashCommandPermissionType.ROLE, False)
-    ])
+    guild_ids=guilds,
+    permissions= NO_STUDENTS_ROLE)
 async def go_for_help_slash_command(ctx):
     async with ctx.channel.typing():
         await rhh.aux_go_for_help_from_command(ctx, ctx.author)
