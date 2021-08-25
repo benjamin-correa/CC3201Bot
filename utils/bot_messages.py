@@ -1,10 +1,10 @@
 # Bot's messages
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, Union
 from datetime import datetime
 
 import discord
 
-from utils.helper_functions import get_nick
+from utils.helper_functions import get_nick, get_lab_group_name, get_lab_text_channel
 
 
 """
@@ -273,8 +273,9 @@ def message_help_on_the_way(member: discord.Member, show_mention: bool = False) 
     return f"**{member.mention if show_mention else get_nick(member)}** on the way!"
 
 
-def info_on_the_way_to(member: discord.Member, group_name: str, show_mention: bool = False) -> str:
-    return f"**{member.mention if show_mention else get_nick(member)}** on the way to **{group_name}**!"
+def info_on_the_way_to(member: discord.Member, group: Union[int, str], guild: discord.Guild, show_mention: bool = False) -> str:
+    text_channel = get_lab_text_channel(guild, group)
+    return f"**{member.mention if show_mention else get_nick(member)}** on the way to **{get_lab_group_name(group)} ({text_channel.mention if show_mention else None})**!"
 
 
 def message_member_not_in_group_for_help() -> str:

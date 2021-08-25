@@ -36,7 +36,7 @@ async def go_for_help_from_message(member: discord.Member, message: discord.Mess
     log_text_channel = hpf.get_log_text_channel(guild)
     private_text_channel = hpf.get_private_text_channel(guild)
     if log_text_channel:
-        await log_text_channel.send(btm.info_on_the_way_to(member, hpf.get_lab_group_name(group)))
+        await log_text_channel.send(btm.info_on_the_way_to(member, group, guild, True))
         #await update_tt_members_log(message, member, lab_group)
     group_text_channel = hpf.get_lab_text_channel(guild, lab_group.name)
     if group_text_channel:
@@ -93,7 +93,7 @@ async def aux_go_for_help_from_command(ctx, member: discord.Member) -> bool:
         pass
     lab_group = hpf.get_lab_group(guild, group)
     if log_text_channel:
-        await log_text_channel.send(btm.info_on_the_way_to(member, hpf.get_lab_group_name(group)))
+        await log_text_channel.send(btm.info_on_the_way_to(member, group, guild, True))
         #await update_tt_members_log(ctx, ctx.author, lab_group)
     # Go for help
     group_text_channel = hpf.get_lab_text_channel(guild, group)
