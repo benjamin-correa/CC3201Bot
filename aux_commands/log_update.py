@@ -29,7 +29,7 @@ async def update_tt_members_log(ctx, member: discord.Member, group: str, message
         # Create new log
         log_info.delete_all_tt_members_log()
         log_info.update_last_log_update_date(today_short_date)
-        log_info.update_log_message_id(0)
+        log_info.update_log_message_id([0])
         tt_roles = hpf.all_teaching_team_roles(guild)
         for role in tt_roles:
             tt_role_members = []
@@ -42,7 +42,7 @@ async def update_tt_members_log(ctx, member: discord.Member, group: str, message
 
     message_list = []
 
-    message_acc = str("**" + datetime.today().strftime('%d-%m-%Y') + " log resume**\n")
+    message_acc = str("**" + datetime.today().strftime('%d-%m-%Y') + " log resume:**\n")
     for role in log_info.tt_members_log.keys():
         message_acc += str('\n ***' + role.name + ":***")
         for member, member_log in log_info.tt_members_log[role].items():
