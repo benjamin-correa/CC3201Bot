@@ -397,7 +397,7 @@ async def deny_all(ctx, *args):
 async def go_for_help_command(ctx):
     async with ctx.channel.typing():
         await rhh.aux_go_for_help_from_command(ctx, ctx.author)
-    await ctx.message.delete(delay=10)
+    await ctx.message.delete(delay=2)
 
 
 @bot.command(name='raise-hand', aliases=[get_unicode_emoji_from_alias('raised_hand'), 'rh'],

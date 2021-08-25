@@ -14,23 +14,22 @@ config_lock = Lock()
 
 
 class LogInfo:
-    def __init__(self, cached_log_info: Tuple[int, datetime]):
+    def __init__(self, cached_log_info: Tuple[List[int], datetime]):
         self.tt_members_log = {}
-        a = []
         if len(cached_log_info) == 2:
-            self.log_message_id, self.last_log_update_date = cached_log_info
+            self.log_messages_ids, self.last_log_update_date = cached_log_info
         else:
-            self.log_message_id = 0
+            self.log_messages_ids = [0]
             self.last_log_update_date = datetime.fromtimestamp(int(0)).strftime('%Y-%m-%d')
 
-    def serialize(self) -> Tuple[int, datetime]:
-        return (self.log_message_id, self.last_log_update_date)
+    def serialize(self) -> Tuple[List[int], datetime]:
+        return (self.log_messages_ids, self.last_log_update_date)
 
     def get_last_log_update_date(self) -> datetime:
         return self.last_log_update_date
 
-    def get_log_message_id(self) -> int:
-        return self.log_message_id
+    def get_log_message_id(self) -> List[int]:
+        return self.log_messages_ids
     
     def update_last_log_update_date(self, date: datetime) -> bool:
         try:
@@ -39,9 +38,9 @@ class LogInfo:
         except ValueError:
             return False
 
-    def update_log_message_id(self, id: int) -> bool:
+    def update_log_message_id(self, ids: List[int]) -> bool:
         try:
-            self.log_message_id = id
+            self.log_messages_ids = ids
             return True
         except ValueError:
             return False
