@@ -11,6 +11,9 @@ from datetime import datetime, timedelta
 
 import discord
 from discord.ext import commands
+from discord_slash import SlashCommand, SlashContext
+from discord_slash.utils.manage_commands import create_permission
+from discord_slash.model import SlashCommandPermissionType
 
 from aux_commands import create_delete_group as cdg, join_leave_group as jlg, \
     random_join_group as rjg, raise_hand_for_help as rhh, allow_deny_permissions as adp, list_group as lg, \
@@ -28,6 +31,8 @@ from utils.my_converters import GuildSettings, LabGroup
 # TODO: spanish messages
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
+slash= SlashCommand(bot, sync_commands=True)
+guilds=list(GUILD_CONFIG.config.keys())
 join_make_group_lock = Lock()
 
 """
@@ -500,6 +505,70 @@ async def save_all_task():
         # await general_text_channel.send(f"Last config snapshot at {now.strftime('%H:%M:%S %Z on %d %b %Y')}")
         print(f"Last config snapshot at {now.strftime('%H:%M:%S %Z on %d %b %Y')}")
         await asyncio.sleep(sleep_time.seconds)
+
+
+"""
+####################################################################
+####################################################################
+############################ SLASH COMMANDS ########################
+####################################################################
+####################################################################
+"""
+
+"""
+####################################################################
+################### CALL-FOR-HELP SLASH-COMMANDS ###################
+####################################################################
+"""
+@slash.slash(
+    name="go",
+    description="Go to the next group that has asked for help.",
+    guild_ids=guilds)
+@slash.permission(
+    guild_id=878346656893010013,
+    permissions=[
+        create_permission(878355476184715324, SlashCommandPermissionType.ROLE, True),
+        create_permission(878355478822920203, SlashCommandPermissionType.ROLE, False)
+    ])
+async def go_for_help_slash_command(ctx):
+    async with ctx.channel.typing():
+        await rhh.aux_go_for_help_from_command(ctx, ctx.author)
+    await ctx.message.delete(delay=10)
+
+
+@slash.slash(
+    name="raise-hand",
+    description="Raise your virtual hand asking for any help.",
+    guild_ids=guilds)
+async def raise_hand(ctx):
+    async with ctx.channel.typing():
+        await rhh.aux_raise_hand(ctx)
+
+
+@slash.slash(
+    name="clear-queue",
+    description="Removes all the groups in the help queue",
+    guild_ids=guilds)
+async def clear_queue(ctx):
+    async with ctx.channel.typing():
+        await rhh.aux_clear_queue(ctx)
+    await ctx.message.delete(delay=10)
+
+
+"""
+####################################################################
+############################### MISC ###############################
+####################################################################
+"""
+
+@slash.slash(
+    name="salute",
+    description="Say hello to this friendly bot.",
+    guild_ids=guilds)
+async def salute_slash(ctx: SlashContext):
+    async with ctx.channel.typing():
+        await aux_salute(ctx.author, ctx)
+
 
 """
 ####################################################################
