@@ -329,20 +329,3 @@ def info_member_accepted_another_invite(member: discord.Member) -> str:
 
 def success_invite_sent_to_group(member: discord.Member, group: discord.CategoryChannel, group_num: int) -> str:
     return f"**{member.mention}** has been invited to join **{group.name}**! Use `!join {group_num}` to accept."
-
-
-"""
-####################################################################
-########################### LOG MESSAGES ###########################
-####################################################################
-"""
-
-def log_message(tt_members_log: Dict[discord.Role, Dict[discord.Member, str]]) -> str:
-    out = "```\n"
-    out += str("**" + datetime.today().strftime('%d-%m-%Y') + " log**\n")
-    for role in tt_members_log.keys():
-        out += str('\n' + role.name + ": \n")
-        for member, member_log in tt_members_log[role].items():
-            out += str("{}: {}\n".format(get_nick(member), member_log))
-    out += "\n```"
-    return out
