@@ -175,19 +175,19 @@ async def aux_raise_hand(ctx):
 
 
 async def aux_clear_queue(ctx):
-    private_text_channel = hpf.get_private_text_channel(ctx.guild)
+    log_text_channel = hpf.get_log_text_channel(ctx.guild)
     help_queue = GUILD_CONFIG.help_queue(ctx.guild)
     try:
         prev_message = help_queue.map_group_to_message_id.get(list(help_queue.map_group_to_message_id)[-1])
-        supr = await private_text_channel.fetch_message(prev_message)
+        supr = await log_text_channel.fetch_message(prev_message)
         await supr.delete(delay = 0)
     except IndexError:
-        supr2 = await private_text_channel.fetch_message(help_queue.empty_queue_message)
+        supr2 = await log_text_channel.fetch_message(help_queue.empty_queue_message)
         await supr2.delete(delay = 0)
         help_queue.empty_queue_message = 0
         print("queue is already empty!")
     GUILD_CONFIG.help_queue(ctx.guild).clear_help_queue()
-    empty_queue_message = await private_text_channel.send(
+    empty_queue_message = await log_text_channel.send(
                 btm.queue_is_empty_message())
     help_queue.empty_queue_message = empty_queue_message.id
     return None
