@@ -1,5 +1,7 @@
 import re
 from typing import Optional
+from datetime import datetime
+import os
 
 import discord
 
@@ -67,6 +69,13 @@ async def aux_get_list(ctx, message_size: int = 200, only_open_groups: bool = Fa
                         message_list.append(message_acc)
                         message_acc = '...\n' + message
         message_list.append(message_acc)
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
+        today_short_date = datetime.today().strftime('%d-%m-%Y %H')
+        f = open(f"logs/{today_short_date}hrs_lab_groups.txt", "w")
         if existing_lab_groups:
             for message in message_list:
                 await ctx.send(message)
+                f.write(message)
+        f.close()
+        await ctx.send(file=discord.File(f"logs/{today_short_date}hrs_lab_groups.txt"))
