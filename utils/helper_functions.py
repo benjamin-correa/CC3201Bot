@@ -196,8 +196,12 @@ def get_general_text_channel(guild: discord.Guild) -> Optional[discord.TextChann
     return discord.utils.get(guild.text_channels, name=GUILD_CONFIG[guild]["GENERAL_TEXT_CHANNEL_NAME"])
 
 
-def get_general_voice_channel(guild: discord.Guild) -> Optional[discord.TextChannel]:
+def get_general_voice_channel(guild: discord.Guild) -> Optional[discord.VoiceChannel]:
     return discord.utils.get(guild.voice_channels, name=GUILD_CONFIG[guild]["GENERAL_VOICE_CHANNEL_NAME"])
+
+
+def get_private_voice_channel(guild: discord.Guild) -> Optional[discord.VoiceChannel]:
+    return discord.utils.get(guild.voice_channels, name=GUILD_CONFIG[guild]["PRIVATE_VOICE_CHANNEL_NAME"])
 
 
 def get_private_text_channel(guild: discord.Guild) -> Optional[discord.TextChannel]:

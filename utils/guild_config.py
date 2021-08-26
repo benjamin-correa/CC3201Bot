@@ -38,12 +38,12 @@ class LogInfo:
         except ValueError:
             return False
 
-    def update_log_message_id(self, ids: List[int]) -> bool:
+    def update_log_message_id(self, ids: List[int]) -> Optional[List[int]]:
         try:
             self.log_messages_ids = ids
-            return True
+            return ids
         except ValueError:
-            return False
+            return ids
 
     def update_tt_member_log(self, tt_member: discord.Member, tt_role: discord.Role, log: str) -> bool:
         try:

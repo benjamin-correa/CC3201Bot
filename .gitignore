@@ -6,3 +6,4 @@ config.json
 __pycache__/
 utils/__pycache__/
 aux_commands/__pycache__/
+logs/

@@ -1,5 +1,6 @@
 from asyncio import Lock
 from datetime import datetime
+import os
 
 import discord
 
@@ -29,7 +30,7 @@ async def update_tt_members_log(ctx, member: discord.Member, group: str, message
         # Create new log
         log_info.delete_all_tt_members_log()
         log_info.update_last_log_update_date(today_short_date)
-        log_info.update_log_message_id([0])
+        last_log_messages_ids = log_info.update_log_message_id([0])
         tt_roles = hpf.all_teaching_team_roles(guild)
         for role in tt_roles:
             tt_role_members = []
@@ -39,28 +40,33 @@ async def update_tt_members_log(ctx, member: discord.Member, group: str, message
         log_info.update_tt_member_log(member, hpf.member_role_in_teaching_team(member, guild), log)
 
     log_text_channel = hpf.get_log_text_channel(ctx.guild)
-
+    today = datetime.today().strftime('%d-%m-%Y')
     message_list = []
-
-    message_acc = str("**" + datetime.today().strftime('%d-%m-%Y') + " log resume:**\n")
+    message_acc = str("## " + today + " log resume:\n")
     for role in log_info.tt_members_log.keys():
-        message_acc += str('\n ***' + role.name + ":***")
+        message_acc += str('- - -\n ### ' + role.name + ": ### \n")
         for member, member_log in log_info.tt_members_log[role].items():
-            message = str("`{}: {}`\n".format(hpf.get_nick(member), member_log))
+            message = str("{}: {}\n".format(hpf.get_nick(member), member_log))
             if message and len(message_acc) + len(message) < message_size:
-                message_acc += '\n' + message
+                message_acc += message
             elif message:
                 message_list.append(message_acc)
                 message_acc = '\n' + message
     message_list.append(message_acc)
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
 
-
+    f = open(f"logs/{today}_log.txt", "w")
     if last_log_messages_ids == [0]:
         if log_text_channel:
             messages_ids = []
             for log_message in message_list:
-                new_log = await log_text_channel.send(log_message)
-                messages_ids.append(new_log.id)
+                f.write(log_message)
+                #new_log = await log_text_channel.send(log_message)
+                #messages_ids.append(new_log.id)
+            f.close()
+            new_log = await log_text_channel.send(file=discord.File(f"logs/{today}_log.txt"))
+            messages_ids.append(new_log.id)
             log_info.update_log_message_id(messages_ids)
     else:       
         if log_text_channel:
@@ -69,6 +75,10 @@ async def update_tt_members_log(ctx, member: discord.Member, group: str, message
                 await supr.delete(delay = 0)
             messages_ids = []
             for log_message in message_list:
-                new_log = await log_text_channel.send(log_message)
-                messages_ids.append(new_log.id)
+                f.write(log_message)
+                #new_log = await log_text_channel.send(log_message)
+                #messages_ids.append(new_log.id)
+            f.close()
+            new_log = await log_text_channel.send(file=discord.File(f"logs/{today}_log.txt"))
+            messages_ids.append(new_log.id)
             log_info.update_log_message_id(messages_ids)

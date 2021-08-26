@@ -52,9 +52,9 @@ async def leave_group(
     # Disconnect from the group voice channel if connected to it
     voice_channel = hpf.existing_member_lab_voice_channel(member)
     if voice_channel and member.voice and member.voice.channel == voice_channel:
-        general_voice_channel = hpf.get_general_voice_channel(guild)
+        private_voice_channel = hpf.get_private_voice_channel(guild)
         # if no general_voice_channel, it will move user out of the current voice channel
-        await member.move_to(general_voice_channel if hpf.member_in_teaching_team(member, guild) else None)
+        await member.move_to(private_voice_channel if hpf.member_in_teaching_team(member, guild) else None)
     # Message to group text channel
     text_channel = hpf.existing_member_lab_text_channel(member)
     if group_message and text_channel:

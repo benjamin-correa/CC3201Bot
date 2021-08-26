@@ -187,6 +187,7 @@ async def join_command(ctx, group: Union[int, str]):
 async def leave_command(ctx):
     async with ctx.channel.typing():
         await jlg.aux_leave_group(ctx, ctx.author)
+    await ctx.message.delete(delay=2)
 
 
 @bot.command(name='invite', aliases=["i"], help='Invite someone to your group. (Requires: member name.)')
@@ -389,7 +390,7 @@ async def deny_all(ctx, *args):
 async def go_for_help_command(ctx):
     async with ctx.channel.typing():
         await rhh.aux_go_for_help_from_command(ctx, ctx.author)
-    await ctx.message.delete(delay=2)
+    await ctx.message.delete(delay=0)
 
 
 @bot.command(name='raise-hand', aliases=[get_unicode_emoji_from_alias('raised_hand'), 'rh'],
@@ -405,7 +406,7 @@ async def raise_hand(ctx):
 async def clear_queue(ctx):
     async with ctx.channel.typing():
         await rhh.aux_clear_queue(ctx)
-    await ctx.message.delete(delay=10)
+    await ctx.message.delete(delay=2)
 
 """
 ####################################################################
